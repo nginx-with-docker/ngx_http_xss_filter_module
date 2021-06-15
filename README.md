@@ -19,8 +19,8 @@ xss-nginx-module - Native cross-site scripting support in nginx.
             <td>1.21.0</td>
             <td>0.06</td>
             <td><ul>
-                <li>docker pull soulteary/prebuilt-nginx-modules:xss-1.21.0</li>
-                <li>docker pull soulteary/prebuilt-nginx-modules:xss-1.21.0-alpine</li>
+                <li>docker pull soulteary/prebuilt-nginx-modules:ngx-1.21.0-xss-0.06</li>
+                <li>docker pull soulteary/prebuilt-nginx-modules:ngx-1.21.0-xss-0.06</li>
             </ul></td>
         </tr>
     </tbody>
