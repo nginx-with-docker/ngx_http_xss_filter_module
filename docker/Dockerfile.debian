@@ -1,0 +1,23 @@
+ARG NGINX_VERSION=1.21.0
+FROM soulteary/prebuilt-nginx-modules:base-${NGINX_VERSION} AS Builder
+
+ARG MODULE_CHECKSUM=3d5c548ba8cbffb91ab6a077d2428dd4ba4cbc2a
+ARG MODULE_VERSION=0.06
+ARG MODULE_NAME=xss-nginx-module-src
+ARG MODULE_SOURCE=https://github.com/nginx-with-docker/xss-nginx-module-src
+
+RUN cd /usr/src && \
+    curl -L "${MODULE_SOURCE}/archive/v${MODULE_VERSION}.tar.gz" -o "v${MODULE_VERSION}.tar.gz" && \
+    echo "${MODULE_CHECKSUM}  v${MODULE_VERSION}.tar.gz" | shasum -c && \
+    tar -zxC /usr/src -f v${MODULE_VERSION}.tar.gz && \
+    cd /usr/src && \
+    mv ${MODULE_NAME}-${MODULE_VERSION}/ ${MODULE_NAME} && \
+    curl -L "https://raw.githubusercontent.com/soulteary/xss-nginx-module/master/config" -o "${MODULE_NAME}/config" && \
+    cd /usr/src/nginx && \
+    echo $CONFARGS && \
+    ./configure --with-compat $CONFARGS --add-dynamic-module=../${MODULE_NAME}/ && \
+    make modules
+
+FROM scratch
+
+COPY --from=Builder /usr/src/nginx/objs/ngx_http_xss_filter_module.so /
